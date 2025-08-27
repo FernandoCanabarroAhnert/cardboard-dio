@@ -3,6 +3,9 @@ package com.fernandocanabarro.cardboard_dio.models.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fernandocanabarro.cardboard_dio.models.enums.BoardColumnType;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,7 +31,29 @@ public class Board {
     private Long id;
     @Column(nullable = false)
     private String name;
-    @OneToMany(mappedBy = "board")
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<BoardColumn> columns = new ArrayList<>();
+
+
+    public BoardColumn getInitialColumn() {
+        return this.columns.stream()
+            .filter(boardColumn -> boardColumn.getType().equals(BoardColumnType.INITIAL))
+            .findFirst()
+            .orElse(null);
+    }
+
+    public BoardColumn getFinalColumn() {
+        return this.columns.stream()
+            .filter(boardColumn -> boardColumn.getType().equals(BoardColumnType.FINAL))
+            .findFirst()
+            .orElse(null);
+    }
+
+    public BoardColumn getCancelColumn() {
+        return this.columns.stream()
+            .filter(boardColumn -> boardColumn.getType().equals(BoardColumnType.CANCEL))
+            .findFirst()
+            .orElse(null);
+    }
 
 }

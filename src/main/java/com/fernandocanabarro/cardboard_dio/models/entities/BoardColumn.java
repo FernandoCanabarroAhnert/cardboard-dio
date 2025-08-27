@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fernandocanabarro.cardboard_dio.models.enums.BoardColumnType;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
@@ -41,7 +42,7 @@ public class BoardColumn {
     @ManyToOne
     @JoinColumn(name = "board_id", nullable = false, foreignKey = @ForeignKey(name = "fk_board_column_board", value = ConstraintMode.CONSTRAINT))
     private Board board;
-    @OneToMany(mappedBy = "boardColumn")
+    @OneToMany(mappedBy = "boardColumn", cascade = CascadeType.ALL)
     private List<Card> cards = new ArrayList<>();
 
 }
