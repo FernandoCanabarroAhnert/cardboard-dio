@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fernandocanabarro.cardboard_dio.exceptions.NotFoundException;
+import com.fernandocanabarro.cardboard_dio.mappers.BoardColumnMapper;
 import com.fernandocanabarro.cardboard_dio.mappers.BoardMapper;
 import com.fernandocanabarro.cardboard_dio.models.dtos.BoardResponseDto;
 import com.fernandocanabarro.cardboard_dio.models.dtos.CreateBoardDto;
@@ -40,39 +41,22 @@ public class BoardService {
 
         List<BoardColumn> columns = new ArrayList<>();
 
-        BoardColumn initialColumn = new BoardColumn();
-        initialColumn.setName(dto.getInitialColumnName());
-        initialColumn.setType(BoardColumnType.INITIAL);
-        initialColumn.setPosition(0);
-        initialColumn.setBoard(board);
+        BoardColumn initialColumn = BoardColumnMapper.toEntity(dto.getInitialColumnName(), BoardColumnType.INITIAL, 0, board);
         this.boardColumnRepository.save(initialColumn);
         columns.add(initialColumn);
 
         int additionalColumns = dto.getPendingColumnsNames().length;
-
         for (int i = 0; i < additionalColumns; i++) {
-            BoardColumn pendingColumn = new BoardColumn();
-            pendingColumn.setName(dto.getPendingColumnsNames()[i]);
-            pendingColumn.setType(BoardColumnType.PENDING);
-            pendingColumn.setPosition(i + 1);
-            pendingColumn.setBoard(board);
+            BoardColumn pendingColumn = BoardColumnMapper.toEntity(dto.getPendingColumnsNames()[i], BoardColumnType.PENDING, i + 1, board);
             this.boardColumnRepository.save(pendingColumn);
             columns.add(pendingColumn);
         }
 
-        BoardColumn finalColumn = new BoardColumn();
-        finalColumn.setName(dto.getFinalColumnName());
-        finalColumn.setType(BoardColumnType.FINAL);
-        finalColumn.setPosition(additionalColumns + 1);
-        finalColumn.setBoard(board);
+        BoardColumn finalColumn = BoardColumnMapper.toEntity(dto.getFinalColumnName(), BoardColumnType.FINAL, additionalColumns + 1, board);
         this.boardColumnRepository.save(finalColumn);
         columns.add(finalColumn);
 
-        BoardColumn cancelColumn = new BoardColumn();
-        cancelColumn.setName(dto.getCancelColumnName());
-        cancelColumn.setType(BoardColumnType.CANCEL);
-        cancelColumn.setPosition(additionalColumns + 2);
-        cancelColumn.setBoard(board);
+        BoardColumn cancelColumn = BoardColumnMapper.toEntity(dto.getCancelColumnName(), BoardColumnType.CANCEL, additionalColumns + 2, board);
         this.boardColumnRepository.save(cancelColumn);
         columns.add(cancelColumn);
 

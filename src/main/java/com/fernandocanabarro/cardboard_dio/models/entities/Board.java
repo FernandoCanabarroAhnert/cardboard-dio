@@ -56,4 +56,8 @@ public class Board {
             .orElse(null);
     }
 
+    public boolean containsColumn(Long columnId) {
+        return this.columns.stream().anyMatch(col -> col.getId().equals(columnId));
+    }
+
 }
